@@ -228,7 +228,7 @@ export default class Page extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.props.prismicCtx.toolbar();
+    this.props.prismicCtx.refreshToolbar();
     // We fetch the page only after it's ready to query the api
     if (!prevProps.prismicCtx) {
       this.fetchPage(this.props);

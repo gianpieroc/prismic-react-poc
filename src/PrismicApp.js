@@ -1,42 +1,47 @@
-import React from 'react';
-import 'whatwg-fetch';
-import Prismic from 'prismic-javascript';
-import PrismicConfig from './prismic-configuration';
-import App from './App';
+import React, { useEffect, useState } from "react";
+import "whatwg-fetch";
+import Prismic from "prismic-javascript";
+import PrismicConfig from "./prismic-configuration";
+import App from "./App";
 
-export default class PrismicApp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {prismicCtx: null};
-    this.buildContext()
-      .then(prismicCtx => {
-        this.setState({prismicCtx});
-      })
-      .catch(e => {
-        console.error(`Cannot contact the API, check your prismic configuration:\n${e}`);
-      });
-  }
+export const PrismicApp = () => {
+  const [prismicContext, setPrismicContext] = useState(null);
 
-  refreshToolbar() {
-    const maybeCurrentExperiment = this.api.currentExperiment();
+  const refreshToolbar = () => {
+    const maybeCurrentExperiment =
+      prismicContext && prismicContext.api.currentExperiment();
     if (maybeCurrentExperiment) {
       window.PrismicToolbar.startExperiment(maybeCurrentExperiment.googleId());
     }
     window.PrismicToolbar.setup(PrismicConfig.apiEndpoint);
-  }
+  };
 
-  buildContext() {
-    const accessToken = PrismicConfig.accessToken;
-    return Prismic.api(PrismicConfig.apiEndpoint, {accessToken}).then(api => ({
+  const contextBuilt = async () => {
+    const { linkResolver, apiEndpoint: endpoint, accessToken } = PrismicConfig;
+    const api = await Prismic.api(PrismicConfig.apiEndpoint, {
+      accessToken
+    });
+
+    return setPrismicContext({
       api,
-      endpoint: PrismicConfig.apiEndpoint,
+      endpoint,
       accessToken,
-      linkResolver: PrismicConfig.linkResolver,
-      toolbar: this.refreshToolbar
-    }));
-  }
+      linkResolver,
+      refreshToolbar
+    });
+  };
 
-  render() {
-    return <App prismicCtx={this.state.prismicCtx} />;
-  }
-}
+  useEffect(() => {
+    try {
+      contextBuilt();
+    } catch (error) {
+      console.error(
+        `Cannot contact the API, check your prismic configuration:\n${error}`
+      );
+    }
+  }, []);
+
+  return <App prismicContext={prismicContext} />;
+};
+
+export default PrismicApp;

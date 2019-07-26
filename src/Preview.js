@@ -1,24 +1,32 @@
-import React from 'react';
-import Prismic from 'prismic-javascript';
-import qs from 'qs';
-import PrismicConfig from './prismic-configuration';
+import React, { useEffect } from "react";
+import qs from "qs";
+import PrismicConfig from "./prismic-configuration";
 
-export default class Preview extends React.Component {
-  componentDidUpdate() {
-    if (this.props.prismicCtx) {
-      console.log(this.props.prismiCtx);
-      const params = qs.parse(this.props.location.search.slice(1));
-      console.log(params, this.props.prismicCtx);
-      this.props.prismicCtx.api
-        .previewSession(params.token, PrismicConfig.linkResolver, '/')
-        .then(url => {
-          console.log(url);
-          this.props.history.push(url);
-        });
+const Preview = ({ location, prismicContext, history }) => {
+  const getUrl = async () => {
+    try {
+      if (prismicContext) {
+        const params = qs.parse(location.search.slice(1));
+        console.log(params)
+        const url = await prismicContext.api.previewSession(
+          params.token,
+          PrismicConfig.linkResolver,
+          "/"
+        );
+        if (url) {
+          history.push(url);
+        }
+      }
+    } catch (error) {
+      console.error(error)
     }
-  }
+  };
 
-  render() {
-    return <p>Loading previews...</p>;
-  }
-}
+  useEffect(() => {
+    getUrl();
+  }, []);
+
+  return <p>Loading previews...</p>;
+};
+
+export default Preview;
