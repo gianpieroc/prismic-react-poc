@@ -6,11 +6,11 @@ const Preview = ({ location, prismicContext, history }) => {
   const getUrl = async () => {
     try {
       if (prismicContext) {
+        const { linkResolver } = PrismicConfig;
         const params = qs.parse(location.search.slice(1));
-        console.log(params)
         const url = await prismicContext.api.previewSession(
           params.token,
-          PrismicConfig.linkResolver,
+          linkResolver,
           "/"
         );
         if (url) {
@@ -18,13 +18,16 @@ const Preview = ({ location, prismicContext, history }) => {
         }
       }
     } catch (error) {
-      console.error(error)
+      console.error(
+        "Error fetching prismic on Preview component: ",
+        error.message
+      );
     }
   };
 
   useEffect(() => {
     getUrl();
-  }, []);
+  }, [prismicContext]);
 
   return <p>Loading previews...</p>;
 };

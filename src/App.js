@@ -3,10 +3,8 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect
 } from "react-router-dom";
 import Preview from "./Preview";
-import Help from "./Help";
 import NotFound from "./NotFound";
 
 const App = props => (
