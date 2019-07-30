@@ -1,33 +1,15 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from "react-router-dom";
-import Preview from "./Preview";
-import NotFound from "./NotFound";
+import React, { useEffect, useState } from "react";
+import { usePrismicContext } from "./utils";
+import Routes from "./routes";
 
-const App = props => (
-  <Router>
-    <Switch>
-      {/* <Redirect exact from="/" to="/help"/> */}
-      <Route
-        exact
-        path="/"
-        component={routeProps => (
-          <Preview {...routeProps} {...props} />
-        )}
-      />
-      <Route
-        exact
-        path="/preview"
-        render={routeProps => (
-          <Preview {...routeProps} {...props} />
-        )}
-      />
-      <Route component={NotFound} />
-    </Switch>
-  </Router>
-);
+export const App = () => {
+  const [prismicContext, setPrismicContext] = useState(null);
+
+  useEffect(() => {
+    usePrismicContext(prismicContext, setPrismicContext);
+  }, []);
+
+  return <Routes prismicContext={prismicContext} />;
+};
 
 export default App;

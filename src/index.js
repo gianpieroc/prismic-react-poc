@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PrismicApp from './PrismicApp';
+import App from './App';
 import './index.css';
 
 ReactDOM.render(
-  <PrismicApp />,
+  <App />,
   document.getElementById('root'),
 );

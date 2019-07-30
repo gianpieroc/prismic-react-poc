@@ -8,7 +8,7 @@
     "prismic-javascript": "2.0.3",
     "prismic-reactjs": "^0.3.2",
     "qs": "^6.4.0",
-    "react": "^16.2.0",
+    "react": "16.8.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "~4.3.1",
     "whatwg-fetch": "~3.0.0"
